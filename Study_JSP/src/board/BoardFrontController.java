@@ -131,6 +131,26 @@ public class BoardFrontController extends HttpServlet {
 			cmd.excute(request, response);
 			viewPage = "boardSearch.jsp";
 		}
+		if(cmdURI.equals("/Login.bbs")){
+			viewPage = "Login.jsp";
+		}
+		if(cmdURI.equals("/LoginCheck.bbs")){
+			cmd = new LoginCheckCmd();
+			cmd.excute(request, response);
+			
+			LoginCheckCmd checkCmd = (LoginCheckCmd) cmd;
+			if(checkCmd.login_check){
+				viewPage = "cookse.jsp";
+			}else {
+				viewPage = "LoginError.bbs";
+			}
+		}
+		if(cmdURI.equals("/LoginError.bbs")){
+			viewPage = "LoginError.jsp";
+		}
+		if(cmdURI.equals("/logout.bbs")){
+			viewPage = "LogQuit.jsp";
+		}
 		RequestDispatcher dis = request.getRequestDispatcher(viewPage);
 		dis.forward(request, response);
 		}
