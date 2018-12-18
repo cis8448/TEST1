@@ -3,6 +3,8 @@ package board.model;
 import java.sql.*;
 import java.util.ArrayList;
 
+import javax.servlet.http.Cookie;
+
 public class BoardDAO {
 	
 	Connection conn ;
@@ -548,4 +550,39 @@ public class BoardDAO {
 	}
 		return list;
 }
+	public boolean LoginCheck(String id, String pass) {
+		boolean LoginOk = false;
+		int LoginCheck = 0;
+		
+		Connection 			conn 		=	null;
+		PreparedStatement 	pstmt 		= 	null;
+		ResultSet			rs			= 	null;
+		
+		try{
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		conn 	=	DriverManager.getConnection(
+		"jdbc:mysql://localhost:3306/jspbook?characterEncoding=UTF-8&serverTimezone=UTC",
+		"jspbook",
+		"jspbook");
+		String sql = "SELECT COUNT(*) AS Login_CHECK FROM MEMBER WHERE id = ? AND PW = ?";
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, id);
+		pstmt.setString(2, pass);
+		rs = pstmt.executeQuery();
+		if(rs.next()){ LoginCheck = rs.getInt("Login_CHECK");}
+		
+		if(LoginCheck > 0) LoginOk = true;
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			try {
+				if(rs 		!= null) rs.close();
+				if(pstmt 	!= null) pstmt.close();
+				if(conn 	!= null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return LoginOk;
+	}
 }
